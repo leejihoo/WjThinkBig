@@ -7,8 +7,8 @@ public class CardControl : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndD
 {
     bool IsCardInMathematicalExpression;
     Vector3 returnPosition;
-    [SerializeField]
-    private CardTypes cardType; 
+    public CardTypes cardType;
+    public string CardValue;
 
     public void OnBeginDrag(PointerEventData eventData)
     {
@@ -17,7 +17,8 @@ public class CardControl : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndD
 
     public void OnDrag(PointerEventData eventData)
     {
-        gameObject.transform.position = Input.mousePosition;
+        
+        gameObject.transform.position = Camera.main.ScreenToWorldPoint(Input.mousePosition + new Vector3(0,0,1f));
     }
 
     public void OnEndDrag(PointerEventData eventData)
