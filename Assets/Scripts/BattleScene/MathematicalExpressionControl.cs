@@ -53,6 +53,23 @@ public class MathematicalExpressionControl : MonoBehaviour
             Damage = Convert.ToInt32(dataTable.Compute(DamageExpression, ""));
             GameObject.Find("EnemyHp").GetComponent<EnemyHpControl>().CurrentHp -= Damage;
             Debug.Log(Damage);
+            SendToTomb();
+        }
+    }
+
+    void SendToTomb()
+    {
+        var cardCount = transform.childCount;
+        for (int i = 0; i< cardCount; i++)
+        {
+            if(transform.GetChild(transform.childCount - 1).GetComponent<CardControl>().cardType == CardType.CardTypes.NUMBER)
+            {
+                transform.GetChild(transform.childCount - 1).parent = GameObject.Find("NumberCardTomb").transform;
+            }
+            else
+            {
+                transform.GetChild(transform.childCount - 1).parent = GameObject.Find("OperatorCardTomb").transform;
+            }
         }
     }
 }

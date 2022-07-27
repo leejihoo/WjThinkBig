@@ -28,8 +28,12 @@ public class CardControl : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndD
         if (IsCardInMathematicalExpression)
         {
             var MathematicalExpression = GameObject.Find("MathematicalExpression");
-            gameObject.transform.SetParent(MathematicalExpression.transform);
-            returnPosition = gameObject.transform.position;
+            if(MathematicalExpression.transform.childCount > 0 && MathematicalExpression.transform.GetChild(MathematicalExpression.transform.childCount -1).GetComponent<CardControl>().cardType != cardType)
+            {
+                gameObject.transform.SetParent(MathematicalExpression.transform);
+                returnPosition = gameObject.transform.position;
+            }
+
         }
 
         this.transform.position = returnPosition;
