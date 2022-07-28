@@ -2,20 +2,24 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using UnityEngine.SceneManagement;
 
 public class BattleManager : MonoBehaviour
 {
     public static BattleManager instance;
-    private int CurrentFloor;
+    public int CurrentFloor;
     private int CurrentTurn;
     private int MaxHandNumberCard;
     private int MaxHandOperatorCard;
+    public int PlayerHp;
 
     public BattleManager()
     {
         CurrentFloor = 1;
+        CurrentTurn = 1;
         MaxHandNumberCard = 3;
         MaxHandOperatorCard = 2;
+        PlayerHp = 3;
     }
 
     private void Awake()
@@ -24,7 +28,7 @@ public class BattleManager : MonoBehaviour
 
         if (instance == null)
         {
-            instance = new BattleManager();
+            instance = this;
         }
         else
         {
@@ -34,8 +38,18 @@ public class BattleManager : MonoBehaviour
 
     }
 
+    private void OnEnable()
+    {
+        SceneManager.sceneLoaded += SceneManager_sceneLoaded;
+    }
+
     // Start is called before the first frame update
     void Start()
+    {
+        
+    }
+
+    private void SceneManager_sceneLoaded(Scene arg0, LoadSceneMode arg1)
     {
         Suffle(GameObject.Find("NumberCardDeck"));
         Draw();
@@ -45,6 +59,7 @@ public class BattleManager : MonoBehaviour
     void Update()
     {
         StageRenew();
+        PlayerHpReNew();
     }
 
     void StageRenew()
@@ -58,8 +73,6 @@ public class BattleManager : MonoBehaviour
     void KeepObject()
     {
         DontDestroyOnLoad(gameObject);
-        DontDestroyOnLoad(GameObject.Find("NumberCardDeck"));
-        DontDestroyOnLoad(GameObject.Find("OperatorCardDeck"));
     }
 
     public void Suffle(GameObject Deck)
@@ -163,5 +176,27 @@ public class BattleManager : MonoBehaviour
                 }
             }
         }
+    }
+
+    public void MoveNextFloor()
+    {
+        Loading.LoadScene("BattleScene");
+        CurrentFloor += 1;
+        CurrentTurn = 1;
+    }
+
+    public void PlayerHpReNew()
+    {
+        if(GameObject.Find("CharaterHearts").transform.childCount > PlayerHp && PlayerHp > 0)
+        {
+            int count = GameObject.Find("CharaterHearts").transform.childCount - PlayerHp;
+            
+            for(int i = 0; i<count; i++)
+            {
+                Destroy(GameObject.Find("CharaterHearts").transform.GetChild(0).gameObject);
+            }
+
+        }
+        
     }
 }

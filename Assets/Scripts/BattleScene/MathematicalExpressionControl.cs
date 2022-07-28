@@ -41,20 +41,24 @@ public class MathematicalExpressionControl : MonoBehaviour
 
     public void AttackBtn()
     {
-        // 수식의 마지막 카드가 숫자 카드일 경우
-        if(transform.GetChild(transform.childCount - 1).GetComponent<CardControl>().cardType == CardType.CardTypes.NUMBER)
+        if(transform.childCount > 0)
         {
-            DamageExpression = "";
-            Damage = 0;
-            foreach (Transform Card in transform)
+            // 수식의 마지막 카드가 숫자 카드일 경우
+            if (transform.GetChild(transform.childCount - 1).GetComponent<CardControl>().cardType == CardType.CardTypes.NUMBER)
             {
-                DamageExpression += Card.GetComponent<CardControl>().CardValue;
+                DamageExpression = "";
+                Damage = 0;
+                foreach (Transform Card in transform)
+                {
+                    DamageExpression += Card.GetComponent<CardControl>().CardValue;
+                }
+                Damage = Convert.ToInt32(dataTable.Compute(DamageExpression, ""));
+                GameObject.Find("EnemyHp").GetComponent<EnemyHpControl>().CurrentHp -= Damage;
+                GameObject.Find("Timer").GetComponent<Timer>().TimerReset();
+                SendToTomb();
             }
-            Damage = Convert.ToInt32(dataTable.Compute(DamageExpression, ""));
-            GameObject.Find("EnemyHp").GetComponent<EnemyHpControl>().CurrentHp -= Damage;
-            Debug.Log(Damage);
-            SendToTomb();
         }
+
     }
 
     void SendToTomb()

@@ -3,40 +3,72 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using static CardType;
-public class CardControl : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler 
+public class CardControl : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler, IPointerClickHandler
 {
     bool IsCardInMathematicalExpression;
     Vector3 returnPosition;
     public CardTypes cardType;
     public string CardValue;
+    public bool IsCanDrag;
+    public bool IsCanClick;
+
+    public CardControl()
+    {
+        IsCanDrag = true;
+        IsCanClick = false;
+    }
 
     public void OnBeginDrag(PointerEventData eventData)
     {
-        returnPosition = gameObject.transform.position;
+
+            returnPosition = gameObject.transform.position;
     }
 
     public void OnDrag(PointerEventData eventData)
     {
-        
-        gameObject.transform.position = Camera.main.ScreenToWorldPoint(Input.mousePosition + new Vector3(0,0,1f));
+        if (IsCanDrag)
+        {
+            gameObject.transform.position = Camera.main.ScreenToWorldPoint(Input.mousePosition + new Vector3(0, 0, 1f));
+        }
     }
 
     public void OnEndDrag(PointerEventData eventData)
     {
-        Debug.Log(IsCardInMathematicalExpression);
 
-        if (IsCardInMathematicalExpression)
+        if (IsCardInMathematicalExpression )
         {
             var MathematicalExpression = GameObject.Find("MathematicalExpression");
-            if(MathematicalExpression.transform.childCount > 0 && MathematicalExpression.transform.GetChild(MathematicalExpression.transform.childCount -1).GetComponent<CardControl>().cardType != cardType)
+            if((MathematicalExpression.transform.childCount > 0 && MathematicalExpression.transform.GetChild(MathematicalExpression.transform.childCount -1).GetComponent<CardControl>().cardType != cardType) || MathematicalExpression.transform.childCount == 0)
             {
-                gameObject.transform.SetParent(MathematicalExpression.transform);
-                returnPosition = gameObject.transform.position;
+                if (IsCanDrag)
+                {
+                    gameObject.transform.SetParent(MathematicalExpression.transform);
+                    returnPosition = gameObject.transform.position;
+                }
+                
             }
 
         }
 
         this.transform.position = returnPosition;
+    }
+
+    public void OnPointerClick(PointerEventData eventData)
+    {
+        if (IsCanClick)
+        {
+            if(cardType == CardTypes.NUMBER)
+            {
+                transform.parent = GameObject.Find("NumberCardDeck").transform;
+            }
+            else
+            {
+                transform.parent = GameObject.Find("OperatorCardDeck").transform;
+            }
+            IsCanDrag = true;
+            IsCanClick = false;
+            GameObject.Find("BattleManager").GetComponent<BattleManager>().MoveNextFloor();
+        }
     }
 
     // Start is called before the first frame update
@@ -67,7 +99,6 @@ public class CardControl : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndD
 
     private void OnTriggerStay2D(Collider2D collision)
     {
-        Debug.Log("╣И╬Н©сю╫");
         if(collision.name == "MathematicalExpression")
             IsCardInMathematicalExpression = true;
     }
@@ -77,4 +108,6 @@ public class CardControl : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndD
         if (collision.name == "MathematicalExpression")
             IsCardInMathematicalExpression = false;
     }
+
+    
 }
