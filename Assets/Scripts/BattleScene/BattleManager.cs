@@ -12,6 +12,7 @@ public class BattleManager : MonoBehaviour
     private int MaxHandNumberCard;
     private int MaxHandOperatorCard;
     public int PlayerHp;
+    public GameObject[] enemies;
 
     public BattleManager()
     {
@@ -35,7 +36,7 @@ public class BattleManager : MonoBehaviour
             Destroy(gameObject);
         }
 
-
+        
     }
 
     private void OnEnable()
@@ -51,15 +52,21 @@ public class BattleManager : MonoBehaviour
 
     private void SceneManager_sceneLoaded(Scene arg0, LoadSceneMode arg1)
     {
+        //StartCoroutine(ResponseTime());
         Suffle(GameObject.Find("NumberCardDeck"));
+        Suffle(GameObject.Find("OperatorCardDeck"));
         Draw();
+
     }
 
     // Update is called once per frame
     void Update()
     {
-        StageRenew();
-        PlayerHpReNew();
+        if(SceneManager.GetActiveScene().name == "BattleScene")
+        {
+            StageRenew();
+            PlayerHpReNew();
+        }
     }
 
     void StageRenew()
@@ -187,7 +194,7 @@ public class BattleManager : MonoBehaviour
 
     public void PlayerHpReNew()
     {
-        if(GameObject.Find("CharaterHearts").transform.childCount > PlayerHp && PlayerHp > 0)
+        if(GameObject.Find("CharaterHearts").transform.childCount > PlayerHp && GameObject.Find("CharaterHearts").transform.childCount > 0)
         {
             int count = GameObject.Find("CharaterHearts").transform.childCount - PlayerHp;
             
@@ -198,5 +205,14 @@ public class BattleManager : MonoBehaviour
 
         }
         
+    }
+
+    IEnumerator ResponseTime()
+    {
+        Debug.Log("작동전");
+        yield return new WaitForSeconds(2);
+        Debug.Log("작동후");
+        Suffle(GameObject.Find("NumberCardDeck"));
+        Draw();
     }
 }

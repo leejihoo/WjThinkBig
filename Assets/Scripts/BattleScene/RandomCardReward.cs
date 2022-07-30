@@ -19,7 +19,7 @@ public class RandomCardReward : MonoBehaviour
     void Update()
     {
         var randomNum = Random.Range(0, 9);
-        var randomOp = Random.Range(0, 6);
+        var randomOp = Random.Range(0, 4);
 
         if (transform.childCount < 2)
         {

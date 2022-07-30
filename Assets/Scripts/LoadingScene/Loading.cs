@@ -28,7 +28,8 @@ public class Loading : MonoBehaviour
         float timer = 0.0f;
         while (!op.isDone)
         {
-            yield return null;
+
+            yield return new WaitForSeconds(0.1f);
             timer += Time.deltaTime;
             if (op.progress < 0.9f)
             {
@@ -45,8 +46,10 @@ public class Loading : MonoBehaviour
                 {
                     op.allowSceneActivation = true;
                     yield break;
+  
                 }
             }
+
         }
     }
 }

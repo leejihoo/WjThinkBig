@@ -6,6 +6,6 @@ public class GameStartBtn : MonoBehaviour
 {
     public void ClickStartBtn()
     {
-        SceneManager.LoadScene("BattleScene");
+        Loading.LoadScene("BattleScene");
     }
 }

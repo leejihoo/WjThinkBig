@@ -22,6 +22,7 @@ public class CardControl : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndD
     {
 
             returnPosition = gameObject.transform.position;
+            gameObject.transform.localScale = new Vector3(1.5f, 1.5f, 1);
     }
 
     public void OnDrag(PointerEventData eventData)
@@ -51,6 +52,7 @@ public class CardControl : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndD
         }
 
         this.transform.position = returnPosition;
+        gameObject.transform.localScale = new Vector3(1, 1, 1);
     }
 
     public void OnPointerClick(PointerEventData eventData)

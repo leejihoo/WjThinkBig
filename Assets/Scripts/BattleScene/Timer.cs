@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using UnityEngine.UI;
 
 public class Timer : MonoBehaviour
 {
@@ -25,6 +26,7 @@ public class Timer : MonoBehaviour
             GameObject.Find("BattleManager").GetComponent<BattleManager>().PlayerHp -= 1;
             time = 30;
         }
+        GameObject.Find("Rope").GetComponent<Image>().fillAmount = (float)time / 30;
     }
 
     public void TimerReset()

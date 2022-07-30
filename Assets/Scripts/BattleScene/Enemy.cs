@@ -6,16 +6,11 @@ public class Enemy : MonoBehaviour
 {
     public string Name;
     public int Hp;
+    public int condition;
 
-    // Start is called before the first frame update
-    void Start()
+    private void Awake()
     {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        Hp += 10 * GameObject.Find("BattleManager").GetComponent<BattleManager>().CurrentFloor;
+        condition = Random.Range(1, GameObject.Find("BattleManager").GetComponent<BattleManager>().CurrentFloor);
     }
 }

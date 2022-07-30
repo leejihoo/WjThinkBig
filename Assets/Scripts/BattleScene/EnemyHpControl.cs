@@ -47,18 +47,30 @@ public class EnemyHpControl : MonoBehaviour
 
     public void BackToDeck()
     {
-        GameObject.Find("NumberCardTomb").transform.DetachChildren();
-        GameObject.Find("OperatorCardTomb").transform.DetachChildren();
+
+        var NCTcount = GameObject.Find("NumberCardTomb").transform.childCount;
+        for (int i = 0; i < NCTcount; i++)
+        {
+            GameObject.Find("NumberCardTomb").transform.GetChild(GameObject.Find("NumberCardTomb").transform.childCount - 1).parent = GameObject.Find("NumberCardDeck").transform;
+        }
+
+        var OCTcount = GameObject.Find("OperatorCardTomb").transform.childCount;
+        for (int i = 0; i < OCTcount; i++)
+        {
+            GameObject.Find("OperatorCardTomb").transform.GetChild(GameObject.Find("OperatorCardTomb").transform.childCount - 1).parent = GameObject.Find("OperatorCardDeck").transform;
+        }
 
         var NCGcount = GameObject.Find("NumberCardGroup").transform.childCount;
         for (int i = 0; i< NCGcount; i++)
         {
+            Debug.Log("숫자 덱으로 돌아가는중");
             GameObject.Find("NumberCardGroup").transform.GetChild(GameObject.Find("NumberCardGroup").transform.childCount - 1).parent = GameObject.Find("NumberCardDeck").transform;
         }
 
         var OCGcount = GameObject.Find("OperatorCardGroup").transform.childCount;
         for (int i = 0; i < OCGcount; i++)
         {
+            Debug.Log("연산자 덱으로 돌아가는중");
             GameObject.Find("OperatorCardGroup").transform.GetChild(GameObject.Find("OperatorCardGroup").transform.childCount - 1).parent = GameObject.Find("OperatorCardDeck").transform;
         }
     }

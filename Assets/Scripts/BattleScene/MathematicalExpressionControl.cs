@@ -53,7 +53,17 @@ public class MathematicalExpressionControl : MonoBehaviour
                     DamageExpression += Card.GetComponent<CardControl>().CardValue;
                 }
                 Damage = Convert.ToInt32(dataTable.Compute(DamageExpression, ""));
-                GameObject.Find("EnemyHp").GetComponent<EnemyHpControl>().CurrentHp -= Damage;
+
+                if(Damage >= GameObject.Find("Enemy").GetComponent<Enemy>().condition)
+                {
+                    GameObject.Find("EnemyHp").GetComponent<EnemyHpControl>().CurrentHp -= Damage;
+                }
+                else
+                {
+                    Debug.Log("수식을 만족하지못했습니다");
+                    GameObject.Find("BattleManager").GetComponent<BattleManager>().PlayerHp -= 1;
+                }
+
                 GameObject.Find("Timer").GetComponent<Timer>().TimerReset();
                 SendToTomb();
             }
