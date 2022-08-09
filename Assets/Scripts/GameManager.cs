@@ -47,7 +47,10 @@ public class GameManager : MonoBehaviour
                 audioSource.clip = audioClips[0];
                 break;
             case "BattleScene":
-                audioSource.clip = audioClips[0];
+                audioSource.clip = audioClips[Random.Range(2,7)];
+                break;
+            case "LoadingScene":
+                audioSource.clip = audioClips[1];
                 break;
         }
 

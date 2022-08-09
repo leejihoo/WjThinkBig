@@ -16,17 +16,20 @@ public class Timer : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(time > 0)
+        if(GameObject.Find("EnemyHp").GetComponent<EnemyHpControl>().EnemyIsDead && GameObject.Find("BattleManager").GetComponent<BattleManager>().PlayerHp > 0)
         {
-            time -= Time.deltaTime;
-            gameObject.GetComponent<TextMeshProUGUI>().text = ((int)time).ToString();
+            if (time > 0)
+            {
+                time -= Time.deltaTime;
+                gameObject.GetComponent<TextMeshProUGUI>().text = ((int)time).ToString();
+            }
+            else
+            {
+                GameObject.Find("BattleManager").GetComponent<BattleManager>().PlayerHp -= 1;
+                time = 30;
+            }
+            GameObject.Find("Rope").GetComponent<Image>().fillAmount = (float)time / 30;
         }
-        else
-        {
-            GameObject.Find("BattleManager").GetComponent<BattleManager>().PlayerHp -= 1;
-            time = 30;
-        }
-        GameObject.Find("Rope").GetComponent<Image>().fillAmount = (float)time / 30;
     }
 
     public void TimerReset()

@@ -20,9 +20,9 @@ public class CardControl : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndD
 
     public void OnBeginDrag(PointerEventData eventData)
     {
-
-            returnPosition = gameObject.transform.position;
-            gameObject.transform.localScale = new Vector3(1.5f, 1.5f, 1);
+        GameObject.Find("cardSelectSound").GetComponent<AudioSource>().Play();
+        returnPosition = gameObject.transform.position;
+        gameObject.transform.localScale = new Vector3(1.5f, 1.5f, 1);
     }
 
     public void OnDrag(PointerEventData eventData)
@@ -39,10 +39,11 @@ public class CardControl : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndD
         if (IsCardInMathematicalExpression )
         {
             var MathematicalExpression = GameObject.Find("MathematicalExpression");
-            if((MathematicalExpression.transform.childCount > 0 && MathematicalExpression.transform.GetChild(MathematicalExpression.transform.childCount -1).GetComponent<CardControl>().cardType != cardType) || MathematicalExpression.transform.childCount == 0)
+            if((MathematicalExpression.transform.childCount > 0 && MathematicalExpression.transform.GetChild(MathematicalExpression.transform.childCount -1).GetComponent<CardControl>().cardType != cardType) || (MathematicalExpression.transform.childCount == 0 && cardType == CardTypes.NUMBER))
             {
                 if (IsCanDrag)
                 {
+                    GameObject.Find("cardPlaceSound").GetComponent<AudioSource>().Play();
                     gameObject.transform.SetParent(MathematicalExpression.transform);
                     returnPosition = gameObject.transform.position;
                 }

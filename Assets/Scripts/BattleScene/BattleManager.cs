@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class BattleManager : MonoBehaviour
 {
@@ -12,15 +13,16 @@ public class BattleManager : MonoBehaviour
     private int MaxHandNumberCard;
     private int MaxHandOperatorCard;
     public int PlayerHp;
-    public GameObject[] enemies;
-
+    public Sprite[] ReStartImage;
+    public AudioClip[] ReStartSound;
+    public bool PlayerIsDead;
     public BattleManager()
     {
         CurrentFloor = 1;
         CurrentTurn = 1;
         MaxHandNumberCard = 3;
         MaxHandOperatorCard = 2;
-        PlayerHp = 3;
+        PlayerIsDead = false;
     }
 
     private void Awake()
@@ -47,12 +49,11 @@ public class BattleManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        PlayerHp = 3;
     }
 
     private void SceneManager_sceneLoaded(Scene arg0, LoadSceneMode arg1)
     {
-        //StartCoroutine(ResponseTime());
         Suffle(GameObject.Find("NumberCardDeck"));
         Suffle(GameObject.Find("OperatorCardDeck"));
         Draw();
@@ -84,9 +85,9 @@ public class BattleManager : MonoBehaviour
 
     public void Suffle(GameObject Deck)
     {
-        var cardCount = Deck.transform.childCount;     
-        
-        for(int i = 0; i<30; i++)
+        var cardCount = Deck.transform.childCount;
+        GameObject.Find("cardSuffleSound").GetComponent<AudioSource>().Play();
+        for (int i = 0; i<30; i++)
         {
             
             var firstRandomNumber = Random.Range(0, cardCount);
@@ -187,9 +188,21 @@ public class BattleManager : MonoBehaviour
 
     public void MoveNextFloor()
     {
-        Loading.LoadScene("BattleScene");
+        Debug.Log("작동");
         CurrentFloor += 1;
         CurrentTurn = 1;
+        if(CurrentFloor >= 11)
+        {
+            GameObject.Find("Canvas").transform.GetChild(GameObject.Find("Canvas").transform.childCount - 1).GetComponent<AudioSource>().clip = ReStartSound[1];
+            GameObject.Find("Canvas").transform.GetChild(GameObject.Find("Canvas").transform.childCount - 1).gameObject.SetActive(true);
+            GameObject.Find("Canvas").transform.GetChild(GameObject.Find("Canvas").transform.childCount - 1).GetChild(0).GetComponent<Image>().sprite = ReStartImage[1];
+            GameObject.Find("Canvas").transform.GetChild(GameObject.Find("Canvas").transform.childCount - 1).GetChild(0).GetComponent<Image>().SetNativeSize();
+        }
+        else
+        {
+            Loading.LoadScene("BattleScene");
+        }
+
     }
 
     public void PlayerHpReNew()
@@ -204,15 +217,21 @@ public class BattleManager : MonoBehaviour
             }
 
         }
+        else
+        {
+            if (!PlayerIsDead && PlayerHp <= 0)
+            {
+                GameObject.Find("Enemy").SetActive(false);
+                GameObject.Find("Player").SetActive(false);
+                GameObject.Find("Canvas").transform.GetChild(GameObject.Find("Canvas").transform.childCount - 1).GetComponent<AudioSource>().clip = ReStartSound[0];
+                GameObject.Find("Canvas").transform.GetChild(GameObject.Find("Canvas").transform.childCount - 1).gameObject.SetActive(true);
+                GameObject.Find("Canvas").transform.GetChild(GameObject.Find("Canvas").transform.childCount - 1).GetChild(0).GetComponent<Image>().sprite = ReStartImage[0];
+                GameObject.Find("Canvas").transform.GetChild(GameObject.Find("Canvas").transform.childCount - 1).GetChild(0).GetComponent<Image>().SetNativeSize();
+                PlayerIsDead = true;
+            }
+
+        }
         
     }
 
-    IEnumerator ResponseTime()
-    {
-        Debug.Log("작동전");
-        yield return new WaitForSeconds(2);
-        Debug.Log("작동후");
-        Suffle(GameObject.Find("NumberCardDeck"));
-        Draw();
-    }
 }
